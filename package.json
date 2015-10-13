@@ -1,0 +1,27 @@
+{
+  "name": "7digify",
+  "version": "0.0.0",
+  "description": "Web application that facilitates playback of Spotify playlists using 7digital's streaming API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rhargreaves/7digify.git"
+  },
+  "keywords": [
+    "7digital",
+    "spotify",
+    "playlist"
+  ],
+  "author": "Robert Hargreaves",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rhargreaves/7digify/issues"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "express-handlebars": "^2.0.1"
+  }
+}
