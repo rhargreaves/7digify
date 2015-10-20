@@ -4,7 +4,8 @@
   "description": "Web application that facilitates playback of Spotify playlists using 7digital's streaming API",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "test": "mocha --reporter spec tests"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,7 @@
     "url": "https://github.com/rhargreaves/7digify/issues"
   },
   "dependencies": {
+    "bootstrap": "^3.3.5",
     "express": "^4.13.3",
     "express-handlebars": "^2.0.1"
   }
