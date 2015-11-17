@@ -1,29 +1,6 @@
 var util = require('util');
 
-module.exports = function(app, config, sevenDigitalApi) {
-
-	// ARGH!
-	var oauthStore = null;
-
-	app.get('/', function (req, res) {
-		var data = { signedIn: false };
-		if(oauthStore) {
-			var sevenDigitalApiUser = sevenDigitalApi.reconfigure({
-				defaultParams: {
-					accesstoken: oauthStore.accessToken,
-					accesssecret: oauthStore.accessSecret
-				}
-			});
-			var user = sevenDigitalApiUser.User();
-			user.getDetails(function(err, userDetails) {
-				data.signedIn = true;
-				data.emailAddress = userDetails.user.emailAddress;
-				res.render('home', data);
-			});
-		} else {
-			res.render('home', data);
-		}
-	});
+module.exports = function(app, config, sevenDigitalApi, credentials) {
 
 	app.get('/7digital-login', function(req, res) {
 		var callbackUrl = util.format('http://%s:%d/7digital-handback',
@@ -36,7 +13,7 @@ module.exports = function(app, config, sevenDigitalApi) {
 					res.status(500).send({ error: err });
 					return;
 				}
-				oauthStore = {
+				credentials = {
 					requestToken: requestToken,
 					requestSecret: requestSecret
 				}
@@ -49,24 +26,25 @@ module.exports = function(app, config, sevenDigitalApi) {
 		if(status === 'Authorised') {
 			var oauth = new sevenDigitalApi.OAuth();
 			oauth.getAccessToken({
-				requesttoken: oauthStore.requestToken,
-				requestsecret: oauthStore.requestSecret
+				requesttoken: credentials.requestToken,
+				requestsecret: credentials.requestSecret
 			}, function(err, accessToken, accessSecret) {
 				if(err) {
 					res.status(500).send({ error: err });
 					return;
 				}
-				oauthStore.accessToken = accessToken;
-				oauthStore.accessSecret = accessSecret;
+				credentials.accessToken = accessToken;
+				credentials.accessSecret = accessSecret;
 				console.log(oauthStore);
 				res.redirect('/');
 			});
-
 		} else {
 			res.status(400).send({ error: 'status: ' + status });
 		}
-
 	});
 
-
+	app.get('/7digital-logout', function(req, res) {
+		credentials = {};
+		res.redirect('/');
+	});
 }
