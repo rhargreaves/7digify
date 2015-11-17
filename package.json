@@ -22,7 +22,7 @@
     "url": "https://github.com/rhargreaves/7digify/issues"
   },
   "dependencies": {
-    "7digital-api": "^0.34.2",
+    "7digital-api": "git://github.com/rhargreaves/7digital-api.git",
     "bootstrap": "^3.3.5",
     "chai": "^3.3.0",
     "express": "^4.13.3",

@@ -1,16 +1,34 @@
+var util = require('util');
 
 module.exports = function(app, config, sevenDigitalApi) {
 
 	// ARGH!
-	var oauthStore = {};
-	var sevenDigitalApiForUser = null;
+	var oauthStore = null;
 
 	app.get('/', function (req, res) {
-		res.render('home');
+		var data = { signedIn: false };
+		if(oauthStore) {
+			var sevenDigitalApiUser = sevenDigitalApi.reconfigure({
+				defaultParams: {
+					accesstoken: oauthStore.accessToken,
+					accesssecret: oauthStore.accessSecret
+				}
+			});
+			var user = sevenDigitalApiUser.User();
+			user.getDetails(function(err, userDetails) {
+				data.signedIn = true;
+				data.emailAddress = userDetails.user.emailAddress;
+				res.render('home', data);
+			});
+		} else {
+			res.render('home', data);
+		}
 	});
 
 	app.get('/7digital-login', function(req, res) {
-		var callbackUrl = 'http://localhost:3000/7digital-handback';
+		var callbackUrl = util.format('http://%s:%d/7digital-handback',
+			config.handbackHost,
+			config.port);
 		var oauth = new sevenDigitalApi.OAuth();
 		oauth.getRequestToken(callbackUrl,
 			function(err, requestToken, requestSecret, authoriseUrl) {
@@ -34,13 +52,14 @@ module.exports = function(app, config, sevenDigitalApi) {
 				requesttoken: oauthStore.requestToken,
 				requestsecret: oauthStore.requestSecret
 			}, function(err, accessToken, accessSecret) {
-				sevenDigitalApiForUser = sevenDigitalApi.reconfigure({
-					defaultParams: {
-						accesstoken: accessToken,
-						accesssecret: accessSecret
-					}
-				});
-				res.redirect('/logged-in');
+				if(err) {
+					res.status(500).send({ error: err });
+					return;
+				}
+				oauthStore.accessToken = accessToken;
+				oauthStore.accessSecret = accessSecret;
+				console.log(oauthStore);
+				res.redirect('/');
 			});
 
 		} else {

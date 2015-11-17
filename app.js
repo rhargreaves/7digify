@@ -3,8 +3,8 @@ var exphbs  = require('express-handlebars');
 var config  = require('./config');
 
 var sevenDigitalApi = require('7digital-api').configure({
-	consumerKey: config.sevenDigitalConsumerKey,
-	consumerSecret: config.sevenDigitalConsumerSecret,
+	consumerkey: config.sevenDigitalConsumerKey,
+	consumersecret: config.sevenDigitalConsumerSecret,
 	defaultParams: {
 		country: 'gb'
 	}
@@ -16,7 +16,7 @@ var routes = require('./routes')(app, config, sevenDigitalApi);
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
-app.use('/public', express.static('public'));
-app.use('/public/bootstrap', express.static('node_modules/bootstrap/dist'));
+app.use('/assets', express.static('assets'));
+app.use('/assets/bootstrap', express.static('node_modules/bootstrap/dist'));
 
-app.listen(3000);
+app.listen(config.port);

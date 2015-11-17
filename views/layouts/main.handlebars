@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>7digify</title>
-		<link type="text/css" rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+		<link type="text/css" rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
 	</head>
 	<body>
 
@@ -26,7 +26,11 @@
 		<div class="container-fluid">
 
 			<div>
-				<a href="7digital-login">	7digital Login</a>
+				{{#if signedIn}}
+				Logged into 7digital as {{emailAddress}} <a href="logout">Log out</a>
+				{{else}}
+					<a href="7digital-login">7digital Login</a>
+				{{/if}}
 			</div>
 			<div>
 				<a href="spotify-login">Spotify Login</a>
