@@ -16,20 +16,8 @@ var credentials = {
 	spotify: {}
 };
 
-app.use(function (req, res, next) {
-	if(Object.keys(credentials.sevenDigital).length === 0) {
-		sevenDigitalApi = sevenDigitalApi.reconfigure({
-			defaultParams: {
-				accesstoken: credentials.sevenDigital.accessToken,
-				accesssecret: credentials.sevenDigital.accessSecret
-			}
-		});
-	}
-	next();
-});
-
 require('./routes/index')(app, config, sevenDigitalApi, credentials);
-require('./routes/7digital-auth')(app, config, sevenDigitalApi, credentials.sevenDigital);
+require('./routes/7digital-auth')(app, config, sevenDigitalApi, credentials);
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
