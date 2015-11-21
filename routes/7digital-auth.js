@@ -1,19 +1,22 @@
 var util = require('util');
 
-module.exports = function(app, config, sevenDigitalApi, credentials) {
+module.exports = function(app, config, sevenDigitalApi) {
 
 	app.get('/7digital-login', function(req, res) {
 		var callbackUrl = util.format('http://%s:%d/7digital-handback',
-			config.handbackHost,
-			config.port);
+				config.handbackHost,
+				config.port);
 		var oauth = new sevenDigitalApi.OAuth();
 		oauth.getRequestToken(callbackUrl, function(err, requestToken, requestSecret, authoriseUrl) {
 			if(err) {
 				res.status(500).send({ error: err });
 				return;
 			}
-			credentials.sevenDigital.requestToken = requestToken;
-			credentials.sevenDigital.requestSecret = requestSecret;
+			var sevenDigitalCreds = {
+				requestToken: requestToken,
+				requestSecret: requestSecret
+			};
+			res.cookie("sevenDigitalCreds", sevenDigitalCreds);
 			res.redirect(authoriseUrl);
 		});
 	});
@@ -22,16 +25,19 @@ module.exports = function(app, config, sevenDigitalApi, credentials) {
 		var status = req.query.status;
 		if(status === 'Authorised') {
 			var oauth = new sevenDigitalApi.OAuth();
+			var sevenDigitalCreds = req.cookies["sevenDigitalCreds"];
 			oauth.getAccessToken({
-				requesttoken: credentials.sevenDigital.requestToken,
-				requestsecret: credentials.sevenDigital.requestSecret
+				requesttoken: sevenDigitalCreds.requestToken,
+				requestsecret: sevenDigitalCreds.requestSecret
 			}, function(err, accessToken, accessSecret) {
 				if(err) {
 					res.status(500).send({ error: err });
 					return;
 				}
-				credentials.sevenDigital.accessToken = accessToken;
-				credentials.sevenDigital.accessSecret = accessSecret;
+				res.cookie("sevenDigitalCreds", {
+					accessToken: accessToken,
+					accessSecret: accessSecret
+				});
 				res.redirect('/');
 			});
 		} else {
@@ -40,7 +46,7 @@ module.exports = function(app, config, sevenDigitalApi, credentials) {
 	});
 
 	app.get('/7digital-logout', function(req, res) {
-		credentials.sevenDigital = {};
+		res.clearCookie('sevenDigitalCreds');
 		res.redirect('/');
 	});
 

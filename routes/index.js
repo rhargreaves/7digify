@@ -4,11 +4,12 @@ module.exports = function(app, config, sevenDigitalApi, credentials) {
 
 	app.get('/', function (req, res) {
 		var data = { signedIn: false };
-		if(Object.keys(credentials.sevenDigital).length !== 0) {
+		var sevenDigitalCreds = req.cookies['sevenDigitalCreds'];
+		if(sevenDigitalCreds) {
 			sevenDigitalApi = sevenDigitalApi.reconfigure({
 				defaultParams: {
-					accesstoken: credentials.sevenDigital.accessToken,
-					accesssecret: credentials.sevenDigital.accessSecret
+					accesstoken: sevenDigitalCreds.accessToken,
+					accesssecret: sevenDigitalCreds.accessSecret
 				}
 			});
 			var user = sevenDigitalApi.User();
