@@ -16,6 +16,7 @@ app.use(cookieParser());
 
 require('./routes/index')(app, config, sevenDigitalApi);
 require('./routes/7digital-auth')(app, config, sevenDigitalApi);
+require('./routes/spotify-auth')(app, config);
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
