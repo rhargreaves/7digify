@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>7digify</title>
 		<link type="text/css" rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
+		<link type="text/css" rel="stylesheet" href="assets/css/main.css" />
 	</head>
 	<body>
 
@@ -27,14 +28,14 @@
 
 			<div>
 				{{#if sevenDigital.signedIn}}
-				Logged into 7digital as {{sevenDigital.emailAddress}} <a href="7digital-logout">Log out</a>
+				7digital: {{sevenDigital.emailAddress}} <a href="7digital-logout">Log out</a>
 				{{else}}
 					<a href="7digital-login">7digital Login</a>
 				{{/if}}
 			</div>
 			<div>
 				{{#if spotify.id}}
-				Logged into Spotify as <a href="{{spotify.url}}"><img src="{{spotify.imageUrl}}" />{{spotify.displayName}}</a> <a href="spotify-logout">Log out</a>
+				Spotify: <a href="{{spotify.url}}"><img class="profile" src="{{spotify.imageUrl}}" />{{spotify.displayName}}</a> <a href="spotify-logout">Log out</a>
 				{{else}}
 					<a href="spotify-login">Spotify Login</a>
 				{{/if}}

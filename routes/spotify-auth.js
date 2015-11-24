@@ -24,7 +24,7 @@ module.exports = function(app, config) {
 
 	app.get('/spotify-login', function(req, res) {
 		var state = generateRandomString(16);
-		res.cookie(stateKey, state);
+		res.cookie(stateKey, state, { httpOnly: true });
 		var scope = 'user-read-private user-read-email';
 		res.redirect('https://accounts.spotify.com/authorize?' +
 				querystring.stringify({
@@ -68,7 +68,7 @@ module.exports = function(app, config) {
 				res.cookie('spotifyCreds', {
 					accessToken: body.access_token,
 					refreshToken: body.refresh_token
-				});
+				}, { httpOnly: true });
 				res.redirect('/');
 			} else {
 				res.send(400).send('invalid_token');

@@ -9,14 +9,13 @@ module.exports = function(app, config, sevenDigitalApi) {
 		var oauth = new sevenDigitalApi.OAuth();
 		oauth.getRequestToken(callbackUrl, function(err, requestToken, requestSecret, authoriseUrl) {
 			if(err) {
-				res.status(500).send({ error: err });
-				return;
+				return res.status(500).send({ error: err });
 			}
 			var sevenDigitalCreds = {
 				requestToken: requestToken,
 				requestSecret: requestSecret
 			};
-			res.cookie("sevenDigitalCreds", sevenDigitalCreds);
+			res.cookie("sevenDigitalCreds", sevenDigitalCreds, { httpOnly: true });
 			res.redirect(authoriseUrl);
 		});
 	});
@@ -31,13 +30,12 @@ module.exports = function(app, config, sevenDigitalApi) {
 				requestsecret: sevenDigitalCreds.requestSecret
 			}, function(err, accessToken, accessSecret) {
 				if(err) {
-					res.status(500).send({ error: err });
-					return;
+					return res.status(500).send({ error: err });
 				}
 				res.cookie("sevenDigitalCreds", {
 					accessToken: accessToken,
 					accessSecret: accessSecret
-				});
+				}, { httpOnly: true });
 				res.redirect('/');
 			});
 		} else {
