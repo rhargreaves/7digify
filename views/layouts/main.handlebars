@@ -26,14 +26,18 @@
 		<div class="container-fluid">
 
 			<div>
-				{{#if signedIn}}
-				Logged into 7digital as {{emailAddress}} <a href="7digital-logout">Log out</a>
+				{{#if sevenDigital.signedIn}}
+				Logged into 7digital as {{sevenDigital.emailAddress}} <a href="7digital-logout">Log out</a>
 				{{else}}
 					<a href="7digital-login">7digital Login</a>
 				{{/if}}
 			</div>
 			<div>
-				<a href="spotify-login">Spotify Login</a>
+				{{#if spotify.id}}
+				Logged into Spotify as <a href="{{spotify.url}}"><img src="{{spotify.imageUrl}}" />{{spotify.displayName}}</a> <a href="spotify-logout">Log out</a>
+				{{else}}
+					<a href="spotify-login">Spotify Login</a>
+				{{/if}}
 			</div>
 
 			{{{body}}}

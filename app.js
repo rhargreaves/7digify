@@ -11,10 +11,17 @@ var sevenDigitalApi = require('7digital-api').configure({
 	}
 });
 
+var SpotifyWebApi = require('spotify-web-api-node');
+var spotifyApi = new SpotifyWebApi({
+	clientId: config.spotifyClientId,
+	clientSecret: config.spotifyClientSecret,
+	redirectUri: 'http://' + config.handbackHost + ':' + config.port + '/spotify-handback'
+});
+
 var app = express();
 app.use(cookieParser());
 
-require('./routes/index')(app, config, sevenDigitalApi);
+require('./routes/index')(app, config, sevenDigitalApi, spotifyApi);
 require('./routes/7digital-auth')(app, config, sevenDigitalApi);
 require('./routes/spotify-auth')(app, config);
 
