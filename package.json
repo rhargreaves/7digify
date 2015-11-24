@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "7digital-api": "git://github.com/rhargreaves/7digital-api.git",
+    "async": "^1.5.0",
     "bootstrap": "^3.3.5",
     "chai": "^3.3.0",
     "cookie-parser": "^1.4.0",

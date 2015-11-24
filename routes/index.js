@@ -1,4 +1,5 @@
 var util = require('util');
+var async = require('async');
 
 module.exports = function(app, config, sevenDigitalApi, spotifyApi) {
 
@@ -49,17 +50,18 @@ module.exports = function(app, config, sevenDigitalApi, spotifyApi) {
 		var sevenDigitalCreds = req.cookies['sevenDigitalCreds'];
 		var spotifyCreds = req.cookies['spotifyCreds'];
 
-		getSevenDigitalUserDetails(data, sevenDigitalCreds, function(err, data) {
+		async.parallel([
+			function(callback) {
+				getSevenDigitalUserDetails(data, sevenDigitalCreds, callback);
+			},
+			function(callback) {
+				getSpotifyUserDetails(data, spotifyCreds, callback);
+			}
+		], function(err, results) {
 			if(err) {
 				return res.status(500).send({ error: err });
 			}
-			getSpotifyUserDetails(data, spotifyCreds, function(err, data) {
-				if(err) {
-					return res.status(500).send({ error: err });
-				}
-				console.log(data);
-				res.render('home', data);
-			});
+			res.render('home', data);
 		});
 	});
 }
